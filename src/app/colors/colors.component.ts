@@ -16,6 +16,7 @@ export class ColorsComponent implements OnInit {
   elementsPerRow = 3;
   firstMiddleIndex = 1;
   colNumber = Math.floor(12 / this.elementsPerRow);
+  editing: boolean;
 
   constructor(private readonly colorsService: ColorsService) {
     this.lastLineIndexes = [];
