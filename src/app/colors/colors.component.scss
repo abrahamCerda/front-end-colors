@@ -1,0 +1,55 @@
+.custom-header{
+  height: 73px;
+}
+
+.custom-body{
+  height: 100%;
+  width: 100%;
+  padding-top: 73px;
+  padding-bottom:60px;
+}
+
+.custom-footer {
+  height: 60px;
+}
+.middle-color-container {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+
+.color-prop-container{
+  height: 33.3%;
+}
+
+.color-container {
+  padding-top: 15px;
+}
+
+.border-radius{
+  border-radius: 15px !important;
+}
+
+.last-row-container{
+  padding-bottom: 15px;
+}
+
+.middle-column-color-container {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+@media(max-width: 576px) {
+  .last-row-container {
+    padding-bottom: 0px;
+  }
+
+  .middle-column-color-container{
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  .color-container {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+}

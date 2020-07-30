@@ -11,6 +11,10 @@ export class StateService {
     localStorage.setItem(key, JSON.stringify(object));
   }
 
+  getData(key: string): {}{
+    return JSON.parse(localStorage.getItem(key));
+  }
+
   clearData(): void{
     localStorage.clear();
   }

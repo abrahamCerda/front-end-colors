@@ -1,1 +1,46 @@
-<p>colors works!</p>
+<div *ngIf="loading">
+  Cargando...
+</div>
+<div *ngIf="!loading" class="fixed-top custom-header pt-3 border rounded border-dark bg-light">
+  <h2 class="text-center">
+    Colores
+  </h2>
+</div>
+<div class="custom-body">
+  <div class="container-fluid h-100">
+    <div class="row h-100 no-gutters">
+      <div *ngFor="let color of colors;let index = index" class="col-12 col-sm-{{colNumber}} color-container" [ngClass]="{
+      'last-row-container': isLastRowContainer(index),
+      'middle-column-color-container': isMiddleColumn(index)}">
+        <div class="container-fluid border rounded border-dark bg-light h-100 border-radius">
+          <div class="row align-items-start justify-content-start color-prop-container">
+            <div class="col-12 text-secondary">
+            <span>
+            {{color.year}}
+          </span>
+            </div>
+          </div>
+          <div class="row align-items-center justify-content-center color-prop-container">
+            <div class="col-12 text-center">
+              <p class="mb-0 text-secondary">
+                {{color.name}}
+              </p>
+              <p class="">
+                {{color.color}}
+              </p>
+            </div>
+          </div>
+          <div class="row align-items-end justify-content-end color-prop-container">
+            <div class="col-12 text-right text-secondary">
+              {{color.pantone}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="fixed-bottom custom-footer clearfix py-2 border rounded border-dark bg-light d-none d-sm-block">
+    <button type="primary" class="btn btn-primary float-left">Atrás</button>
+    <button type="primary" class="btn btn-primary float-right">Siguiente</button>
+</div>
