@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {LoginService} from './login.service';
+import {StateService} from '../state.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +14,9 @@ export class LoginComponent implements OnInit {
   password: string;
   rememberMe: boolean;
 
-  constructor(private readonly loginService: LoginService) {}
+  constructor(private readonly loginService: LoginService,
+              private readonly stateService: StateService,
+              private readonly router: Router) {}
 
   ngOnInit(): void {
   }
@@ -24,7 +28,8 @@ export class LoginComponent implements OnInit {
     this.loginService.login(this.email, this.password, this.rememberMe)
       .subscribe(loginResponse => {
         /* Navegar a la siguiente pantalla*/
-        console.log(loginResponse);
+        this.stateService.storeData('auth', loginResponse);
+        this.router.navigateByUrl('colores');
       }, error => {
         /* Que hacer en caso de error*/
         console.error(error);
