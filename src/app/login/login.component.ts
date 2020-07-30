@@ -12,7 +12,6 @@ export class LoginComponent implements OnInit {
 
   email: string;
   password: string;
-  rememberMe: boolean;
 
   constructor(private readonly loginService: LoginService,
               private readonly stateService: StateService,
@@ -25,7 +24,7 @@ export class LoginComponent implements OnInit {
     if (!this.email || this.email === '' || !this.password || this.password === ''){
       return;
     }
-    this.loginService.login(this.email, this.password, this.rememberMe)
+    this.loginService.login(this.email, this.password)
       .subscribe(loginResponse => {
         /* Navegar a la siguiente pantalla*/
         this.stateService.storeData('auth', loginResponse);

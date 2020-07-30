@@ -30,7 +30,6 @@ export class AuthInterceptor implements HttpInterceptor{
           err => error = err
         ),
         finalize(() => {
-          console.log(error);
           if (error instanceof HttpErrorResponse && error.status === 401){
             this.stateService.clearData();
             this.router.navigateByUrl('/');
