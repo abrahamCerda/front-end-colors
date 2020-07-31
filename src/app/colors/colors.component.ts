@@ -18,6 +18,9 @@ export class ColorsComponent implements OnInit {
   elementsPerRow = 3;
   firstMiddleIndex = 1;
   colNumber = Math.floor(12 / this.elementsPerRow);
+  currentPage = 0;
+  totalNumberOfPages: number;
+  pageSize = 6;
   editing: boolean;
 
   constructor(private readonly colorsService: ColorsService,
@@ -29,25 +32,7 @@ export class ColorsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.colorsService.getColors()
-      .subscribe(colors => {
-        this.colors = colors;
-        // tslint:disable-next-line:no-conditional-assignment
-        // @ts-ignore
-        const n = colors.length;
-        for (let i = this.firstMiddleIndex; i < n; i = i + this.elementsPerRow){
-          this.middleColumnIndexes.push(i);
-        }
-        let j = 0;
-        const lastRowElements = n % this.elementsPerRow;
-        while (j < lastRowElements){
-          this.lastLineIndexes.push((n - 1) - j);
-          j++;
-        }
-        this.loading = false;
-      }, error => {
-        console.error(error);
-      });
+    this.getData(this.currentPage, this.pageSize);
   }
 
   isLastRowContainer(index): boolean{
@@ -61,6 +46,43 @@ export class ColorsComponent implements OnInit {
   logout(): void {
     this.stateService.clearData();
     this.router.navigateByUrl('/');
+  }
+
+  nextPage(): void{
+    this.loading = true;
+    this.getData(this.currentPage + 1, this.pageSize);
+  }
+
+  previousPage(): void{
+    this.loading = true;
+    this.getData(this.currentPage - 1, this.pageSize);
+  }
+
+  private getData(page, pageSize): void{
+    this.colorsService.getColors(page, pageSize)
+      .subscribe(data => {
+        this.colors = data.colors;
+        this.totalNumberOfPages = data.totalPages;
+        this.currentPage = data.currentPage;
+        // tslint:disable-next-line:no-conditional-assignment
+        // @ts-ignore
+        const n = this.colors.length;
+        for (let i = this.firstMiddleIndex; i < n; i = i + this.elementsPerRow){
+          this.middleColumnIndexes.push(i);
+        }
+        let j = 0;
+        let lastRowElements = n % this.elementsPerRow;
+        if (!lastRowElements){
+          lastRowElements = this.elementsPerRow;
+        }
+        while (j < lastRowElements){
+          this.lastLineIndexes.push((n - 1) - j);
+          j++;
+        }
+        this.loading = false;
+      }, error => {
+        console.error(error);
+      });
   }
 
 

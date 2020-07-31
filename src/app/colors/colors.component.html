@@ -54,8 +54,8 @@
   </div>
 </div>
 <div class="fixed-bottom custom-footer clearfix py-2 border rounded border-dark bg-light d-none d-sm-block">
-    <button type="primary" class="btn btn-primary float-left">Atrás</button>
-    <button type="primary" class="btn btn-primary float-right">Siguiente</button>
+    <button *ngIf="currentPage !== 0" type="button" class="btn btn-primary float-left" (click)="previousPage()">Atrás</button>
+    <button *ngIf="currentPage < totalNumberOfPages - 1" type="button" class="btn btn-primary float-right"(click)="nextPage()">Siguiente</button>
 </div>
 
 <!-- Modal -->
@@ -69,7 +69,10 @@
         </button>
       </div>
       <div class="modal-body">
-        ...
+        <div class="form-group">
+          <label for="colorName">Nombre</label>
+          <input type="text" class="form-control" id="colorName" aria-describedby="colorNameHelp" placeholder="Ej: azul"/>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
