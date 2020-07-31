@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {Color} from './color';
 import {ColorsService} from './colors.service';
+import {StateService} from '../state.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-colors',
@@ -18,7 +20,9 @@ export class ColorsComponent implements OnInit {
   colNumber = Math.floor(12 / this.elementsPerRow);
   editing: boolean;
 
-  constructor(private readonly colorsService: ColorsService) {
+  constructor(private readonly colorsService: ColorsService,
+              private readonly stateService: StateService,
+              private readonly router: Router) {
     this.lastLineIndexes = [];
     this.middleColumnIndexes = [];
   }
@@ -35,12 +39,11 @@ export class ColorsComponent implements OnInit {
           this.middleColumnIndexes.push(i);
         }
         let j = 0;
-        while (j < this.elementsPerRow){
+        const lastRowElements = n % this.elementsPerRow;
+        while (j < lastRowElements){
           this.lastLineIndexes.push((n - 1) - j);
           j++;
         }
-        console.log(this.middleColumnIndexes);
-        console.log(this.lastLineIndexes);
         this.loading = false;
       }, error => {
         console.error(error);
@@ -53,6 +56,11 @@ export class ColorsComponent implements OnInit {
 
   isMiddleColumn(index): boolean{
     return this.middleColumnIndexes.indexOf(index) !== -1;
+  }
+
+  logout(): void {
+    this.stateService.clearData();
+    this.router.navigateByUrl('/');
   }
 
 
