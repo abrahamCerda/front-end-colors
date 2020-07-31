@@ -17,7 +17,7 @@ export class LoginService {
     this.LOGIN_ENDPOINT = `${environment.apiUrl}/auth/login`;
   }
 
-  login(email: string, password: string): Observable<LoginResponse>{
+  public login(email: string, password: string): Observable<LoginResponse>{
     const body = {
       email,
       password,

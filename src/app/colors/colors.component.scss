@@ -7,35 +7,45 @@
   width: 100%;
   padding-top: 73px;
   padding-bottom:60px;
+  overflow: auto;
+}
+
+.vertical-infinite-div {
+  height: 100%;
+  overflow: auto;
 }
 
 .custom-footer {
   height: 60px;
-}
-.middle-color-container {
-  padding-left: 15px !important;
-  padding-right: 15px !important;
 }
 
 .color-prop-container{
   height: 33.3%;
 }
 
-.color-container {
-  padding-top: 15px;
-}
-
 .border-radius{
   border-radius: 15px !important;
 }
 
-.last-row-container{
+.p-t-15{
+  padding-top: 15px;
+}
+
+.p-b-15{
   padding-bottom: 15px;
 }
 
-.middle-column-color-container {
-  padding-left: 15px;
-  padding-right: 15px;
+.p-x-7{
+  padding-left: 7.5px;
+  padding-right: 7.5px;
+}
+
+.p-l-7{
+  padding-left: 7.5px;
+}
+
+.p-r-7{
+  padding-right: 7.5px;
 }
 
 .title {

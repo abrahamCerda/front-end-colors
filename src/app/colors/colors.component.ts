@@ -3,6 +3,7 @@ import {Color} from './color';
 import {ColorsService} from './colors.service';
 import {StateService} from '../state.service';
 import {Router} from '@angular/router';
+import {MatrixHelper} from '../utils/MatrixHelper';
 
 @Component({
   selector: 'app-colors',
@@ -11,16 +12,16 @@ import {Router} from '@angular/router';
 })
 export class ColorsComponent implements OnInit {
 
-  colors: Color[];
+  numberOfCols = 3;
+  colors: Color[][];
   loading: boolean;
   lastLineIndexes: number[];
   middleColumnIndexes: number[];
-  elementsPerRow = 3;
-  firstMiddleIndex = 1;
-  colNumber = Math.floor(12 / this.elementsPerRow);
+  colNumber = Math.floor(12 / this.numberOfCols);
   currentPage = 0;
   totalNumberOfPages: number;
   pageSize = 6;
+  newColor: Color;
   editing: boolean;
 
   constructor(private readonly colorsService: ColorsService,
@@ -28,6 +29,13 @@ export class ColorsComponent implements OnInit {
               private readonly router: Router) {
     this.lastLineIndexes = [];
     this.middleColumnIndexes = [];
+    this.newColor = {
+      id: null,
+      name: null,
+      color: null,
+      pantone: null,
+      year: null
+    };
   }
 
   ngOnInit(): void {
@@ -35,12 +43,20 @@ export class ColorsComponent implements OnInit {
     this.getData(this.currentPage, this.pageSize);
   }
 
-  isLastRowContainer(index): boolean{
-    return this.lastLineIndexes.indexOf(index) !== -1;
+  isLastRow(rowIndex): boolean{
+    return rowIndex === (this.colors.length - 1);
   }
 
-  isMiddleColumn(index): boolean{
-    return this.middleColumnIndexes.indexOf(index) !== -1;
+  isMiddleCol(columnIndex): boolean{
+    return columnIndex !== 0 && columnIndex !== (this.numberOfCols - 1);
+  }
+
+  isLastCol(columnIndex): boolean{
+    return columnIndex === (this.numberOfCols - 1);
+  }
+
+  isFirstCol(columnIndex): boolean{
+    return columnIndex === 0;
   }
 
   logout(): void {
@@ -61,12 +77,13 @@ export class ColorsComponent implements OnInit {
   private getData(page, pageSize): void{
     this.colorsService.getColors(page, pageSize)
       .subscribe(data => {
-        this.colors = data.colors;
+        this.colors = MatrixHelper.listToMatrix(data.colors, this.numberOfCols);
         this.totalNumberOfPages = data.totalPages;
         this.currentPage = data.currentPage;
         // tslint:disable-next-line:no-conditional-assignment
         // @ts-ignore
-        const n = this.colors.length;
+        /*const colorsLen = this.colors.length;
+        const n = colorsLen < this.pageSize ? colorsLen : this.pageSize;
         for (let i = this.firstMiddleIndex; i < n; i = i + this.elementsPerRow){
           this.middleColumnIndexes.push(i);
         }
@@ -78,11 +95,39 @@ export class ColorsComponent implements OnInit {
         while (j < lastRowElements){
           this.lastLineIndexes.push((n - 1) - j);
           j++;
-        }
+        }*/
         this.loading = false;
       }, error => {
         console.error(error);
       });
+  }
+
+  saveColor(): void{
+    this.loading = true;
+    if (this.editing){
+      return;
+    }else{
+      console.log(this.colorsService);
+      this.colorsService.createColor(this.newColor)
+        .subscribe(color => {
+          console.log('RESPUESTA POST', color);
+          this.hideModal('#createColorModal');
+          this.loading = false;
+          this.getData(this.currentPage, this.pageSize);
+        }, error => {
+          console.error(error);
+        });
+    }
+  }
+
+  showModal(modalName): void{
+    // @ts-ignore
+    window.$(modalName).modal('show');
+  }
+
+  hideModal(modalName): void{
+    // @ts-ignore
+    window.$(modalName).modal('hide');
   }
 
 

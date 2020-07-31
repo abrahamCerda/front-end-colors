@@ -7,15 +7,15 @@ export class StateService {
 
   constructor() { }
 
-  storeData(key: string, object: {}): void{
+  public storeData(key: string, object: {}): void{
     localStorage.setItem(key, JSON.stringify(object));
   }
 
-  getData(key: string): {}{
+  public getData(key: string): {}{
     return JSON.parse(localStorage.getItem(key));
   }
 
-  clearData(): void{
+  public clearData(): void{
     localStorage.clear();
   }
 }
