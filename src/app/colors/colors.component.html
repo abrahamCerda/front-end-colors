@@ -7,10 +7,16 @@
         </h2>
       </div>
       <div class="col-4 d-flex justify-content-end align-items-end">
-        <button type="button" class="btn btn-danger mr-3" (click)="showModal('#createColorModal')">Nuevo Color</button>
-        <button type="button" class="btn btn-primary" (click)="logout()">
-          Cerrar Sesion
-        </button>
+        <div class="dropdown">
+          <button class="btn btn-outline-light text-dark dropdown-toggle" type="button"
+                  id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span>Acciones</span>
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a *ngIf="canCreate()" class="dropdown-item" (click)="createColor()">Crear Color</a>
+            <a class="dropdown-item" (click)="logout()">Cerrar sesión</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -28,11 +34,23 @@
       'p-x-7': isMiddleCol(colIndex),
       'p-l-7': isLastCol(colIndex)}">
         <div class="container-fluid border rounded border-dark bg-light h-100 border-radius">
-          <div class="row align-items-start justify-content-start color-prop-container">
-            <div class="col-12 text-secondary">
+          <div class="row no-gutters color-prop-container">
+            <div class="col text-secondary align-items-center justify-content-start">
             <span>
               {{color.year}}
             </span>
+            </div>
+            <div *ngIf="canEdit() || canDelete()" class="col justify-content-end align-items-start text-right pt-1">
+              <span (click)="editColor(color)">
+                <svg width="40" height="40" viewBox="0 0 24 24" class="bi bi-pencil-square clickable" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                </svg>
+              </span>
+              <svg width="40" height="40" viewBox="0 0 24 24" class="bi bi-trash clickable" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+              </svg>
             </div>
           </div>
           <div class="row align-items-center justify-content-center color-prop-container">
@@ -56,8 +74,20 @@
   </div>
 </div>
 <div class="fixed-bottom custom-footer clearfix py-2 border rounded border-dark bg-light d-none d-sm-block">
-    <button *ngIf="currentPage !== 0" type="button" class="btn btn-primary float-left" (click)="previousPage()">Atrás</button>
-    <button *ngIf="currentPage < totalNumberOfPages - 1" type="button" class="btn btn-primary float-right" (click)="nextPage()">Siguiente</button>
+    <button *ngIf="currentPage !== 0" type="button" class="btn btn-outline-light text-dark float-left"
+            (click)="previousPage()">
+      <svg width="24" height="24" viewBox="0 0 20 20" class="bi bi-chevron-left" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+      </svg>
+      Atrás
+    </button>
+    <button *ngIf="currentPage < totalNumberOfPages - 1" type="button" class="btn btn-outline-light text-dark float-right"
+            (click)="nextPage()">
+      Siguiente
+      <svg class="bi bi-chevron-right" width="24" height="24" viewBox="0 0 20 20"
+           fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd"
+                                                                        d="M6.646 3.646a.5.5 0 01.708 0l6 6a.5.5 0 010 .708l-6 6a.5.5 0 01-.708-.708L12.293 10 6.646 4.354a.5.5 0 010-.708z"/></svg>
+    </button>
 </div>
 
 <!-- Modal -->
@@ -65,7 +95,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="createColorLabel">Crear color</h5>
+        <h5 class="modal-title" id="createColorLabel">{{modalTitle}}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -91,7 +121,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="hideModal('#createColorModal')">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="saveColor()">Crear</button>
+        <button type="button" class="btn btn-primary" (click)="saveColor()">{{okModalButtonText}}</button>
       </div>
     </div>
   </div>

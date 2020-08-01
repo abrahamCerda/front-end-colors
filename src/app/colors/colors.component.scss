@@ -52,6 +52,10 @@
   width: 90%;
 }
 
+.clickable{
+  cursor: pointer;
+}
+
 @media(max-width: 576px) {
   .last-row-container {
     padding-bottom: 0px;

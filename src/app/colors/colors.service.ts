@@ -33,4 +33,15 @@ export class ColorsService {
         catchError(ErrorHandler.handleError)
       );
   }
+
+  public editColor(colorToEdit: Color): Observable<Color> {
+    const endpoint = `${this.URL}/${colorToEdit.id}`;
+    const {name, color, pantone, year} = colorToEdit;
+    return this.httpClient.put<Color>(endpoint, {
+      name, color, pantone, year
+    })
+      .pipe(
+        catchError(ErrorHandler.handleError)
+      );
+  }
 }

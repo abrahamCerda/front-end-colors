@@ -23,6 +23,9 @@ export class ColorsComponent implements OnInit {
   pageSize = 6;
   newColor: Color;
   editing: boolean;
+  authData: any;
+  okModalButtonText: string;
+  modalTitle: string;
 
   constructor(private readonly colorsService: ColorsService,
               private readonly stateService: StateService,
@@ -36,6 +39,9 @@ export class ColorsComponent implements OnInit {
       pantone: null,
       year: null
     };
+    this.authData = this.stateService.getData('auth') as any;
+    this.okModalButtonText = 'Crear';
+    this.modalTitle = 'Crear Color';
   }
 
   ngOnInit(): void {
@@ -105,12 +111,15 @@ export class ColorsComponent implements OnInit {
   saveColor(): void{
     this.loading = true;
     if (this.editing){
-      return;
+      this.colorsService.editColor(this.newColor)
+        .subscribe(color => {
+          this.hideModal('#createColorModal');
+          this.loading = false;
+          this.getData(this.currentPage, this.pageSize);
+        });
     }else{
-      console.log(this.colorsService);
       this.colorsService.createColor(this.newColor)
         .subscribe(color => {
-          console.log('RESPUESTA POST', color);
           this.hideModal('#createColorModal');
           this.loading = false;
           this.getData(this.currentPage, this.pageSize);
@@ -128,6 +137,40 @@ export class ColorsComponent implements OnInit {
   hideModal(modalName): void{
     // @ts-ignore
     window.$(modalName).modal('hide');
+  }
+
+  canDelete(): boolean{
+    return this.authData.role.name === 'administrator';
+  }
+
+  canEdit(): boolean{
+    return this.authData.role.name === 'administrator';
+  }
+
+  canCreate(): boolean{
+    return this.authData.role.name === 'administrator';
+  }
+
+  editColor(color: Color): void {
+    this.editing = true;
+    this.newColor = color;
+    this.okModalButtonText = 'Editar';
+    this.modalTitle = 'Editar Color';
+    this.showModal('#createColorModal');
+  }
+
+  createColor(){
+    this.editing = false;
+    this.newColor = {
+      id: null,
+      name: null,
+      color: null,
+      pantone: null,
+      year: null
+    };
+    this.modalTitle = 'Crear Color';
+    this.okModalButtonText = 'Crear';
+    this.showModal('#createColorModal');
   }
 
 
