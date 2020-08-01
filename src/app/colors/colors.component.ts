@@ -86,22 +86,6 @@ export class ColorsComponent implements OnInit {
         this.colors = MatrixHelper.listToMatrix(data.colors, this.numberOfCols);
         this.totalNumberOfPages = data.totalPages;
         this.currentPage = data.currentPage;
-        // tslint:disable-next-line:no-conditional-assignment
-        // @ts-ignore
-        /*const colorsLen = this.colors.length;
-        const n = colorsLen < this.pageSize ? colorsLen : this.pageSize;
-        for (let i = this.firstMiddleIndex; i < n; i = i + this.elementsPerRow){
-          this.middleColumnIndexes.push(i);
-        }
-        let j = 0;
-        let lastRowElements = n % this.elementsPerRow;
-        if (!lastRowElements){
-          lastRowElements = this.elementsPerRow;
-        }
-        while (j < lastRowElements){
-          this.lastLineIndexes.push((n - 1) - j);
-          j++;
-        }*/
         this.loading = false;
       }, error => {
         console.error(error);
@@ -159,7 +143,7 @@ export class ColorsComponent implements OnInit {
     this.showModal('#createColorModal');
   }
 
-  createColor(){
+  createColor(): void{
     this.editing = false;
     this.newColor = {
       id: null,
@@ -171,6 +155,18 @@ export class ColorsComponent implements OnInit {
     this.modalTitle = 'Crear Color';
     this.okModalButtonText = 'Crear';
     this.showModal('#createColorModal');
+  }
+
+  deleteColor(color: Color): void {
+    this.loading = true;
+    this.colorsService.deleteColor(color)
+      .subscribe(data => {
+        console.log(data);
+        this.loading = false;
+        this.getData(this.currentPage, this.pageSize);
+      }, error => {
+        console.log(error);
+      });
   }
 
 

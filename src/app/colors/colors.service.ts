@@ -44,4 +44,12 @@ export class ColorsService {
         catchError(ErrorHandler.handleError)
       );
   }
+
+  public deleteColor(colorToDelete: Color): Observable<any> {
+    const endpoint = `${this.URL}/${colorToDelete.id}`;
+    return this.httpClient.delete<Color>(endpoint)
+      .pipe(
+        catchError(ErrorHandler.handleError)
+      );
+  }
 }
