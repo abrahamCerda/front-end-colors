@@ -4,6 +4,7 @@ import {ColorsService} from './colors.service';
 import {StateService} from '../state.service';
 import {Router} from '@angular/router';
 import {MatrixHelper} from '../utils/MatrixHelper';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-colors',
@@ -29,7 +30,8 @@ export class ColorsComponent implements OnInit {
 
   constructor(private readonly colorsService: ColorsService,
               private readonly stateService: StateService,
-              private readonly router: Router) {
+              private readonly router: Router,
+              private readonly toastr: ToastrService) {
     this.lastLineIndexes = [];
     this.middleColumnIndexes = [];
     this.newColor = {
@@ -89,6 +91,7 @@ export class ColorsComponent implements OnInit {
         this.loading = false;
       }, error => {
         console.error(error);
+        this.toastr.error('Error al obtener los colores', 'Error :(');
       });
   }
 
@@ -99,16 +102,22 @@ export class ColorsComponent implements OnInit {
         .subscribe(color => {
           this.hideModal('#createColorModal');
           this.loading = false;
+          this.toastr.success('Color editado con éxito', 'Éxito :)');
           this.getData(this.currentPage, this.pageSize);
+        }, error => {
+          console.error(error);
+          this.toastr.error('Error al editar el color', 'Error :(');
         });
     }else{
       this.colorsService.createColor(this.newColor)
         .subscribe(color => {
           this.hideModal('#createColorModal');
           this.loading = false;
+          this.toastr.success('Color creado con éxito', 'Éxito :)');
           this.getData(this.currentPage, this.pageSize);
         }, error => {
           console.error(error);
+          this.toastr.error('Error al crear el color', 'Error :(');
         });
     }
   }
@@ -163,9 +172,11 @@ export class ColorsComponent implements OnInit {
       .subscribe(data => {
         console.log(data);
         this.loading = false;
+        this.toastr.success('Color eliminado con éxito', 'Éxito :)');
         this.getData(this.currentPage, this.pageSize);
       }, error => {
         console.log(error);
+        this.toastr.error('Error al eliminar el color', 'Error :(');
       });
   }
 
